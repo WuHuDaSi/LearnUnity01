@@ -9,10 +9,13 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 _moveDirection;
     private Rigidbody2D _rigidBody2D;
+    private Animator _animator;
+
 
     private void Awake()
     {
         _rigidBody2D = GetComponent<Rigidbody2D>();
+        _animator = GetComponent<Animator>();
     }
 
     // Start is called before the first frame update
@@ -26,6 +29,8 @@ public class PlayerController : MonoBehaviour
     {
         _moveDirection = new Vector2(Input.GetAxisRaw("Horizontal"),Input.GetAxisRaw("Vertical"));
         _moveDirection *= moveSpeed;
+
+        _animator.SetFloat(AnimatorHash.MoveSpeed, Mathf.Abs(_moveDirection.x)+Mathf.Abs(_moveDirection.y));
     }
 
     private void FixedUpdate()
