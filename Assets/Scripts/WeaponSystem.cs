@@ -4,6 +4,7 @@ using UnityEngine;
 public class WeaponSystem : MonoBehaviour
 {
     [SerializeField] private Transform firePoint;
+    [SerializeField] private Transform shootTrail;
     private Animator _animator;
 
     private void Awake()
@@ -24,12 +25,27 @@ public class WeaponSystem : MonoBehaviour
         {
             _animator.SetBool(AnimatorHash.IsShooting,true);
             Debug.Log("shooting");
-            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 mousePodition2D = new Vector2(mousePosition.x,mousePosition.y);
-            Vector2 firePointPosition = new Vector2(firePoint.position.x, firePoint.position.y);
-            Vector2 shootDirection = mousePodition2D - firePointPosition;
-            Debug.DrawLine(firePointPosition,shootDirection*100,Color.red);
+            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            //Vector2 mousePosition2D = new Vector2(mousePosition.x,mousePosition.y);
+            Vector2 firePointPosition = firePoint.position;
+            Vector2 shootDirection;
+            if (Vector2.Distance(firePointPosition, mousePosition) > 0.5f)
+            {
+                shootDirection = mousePosition - firePointPosition;
+            }
+            else
+            {
+
+                shootDirection = transform.up; //firePoint.parent.up
+            }
+            Debug.Log(shootDirection);
+            float trailAngle = Mathf.Atan2(shootDirection.y,shootDirection.x) * Mathf.Rad2Deg;
+            Quaternion trailRotation = Quaternion.AngleAxis(trailAngle,Vector3.forward);
+            Transform trail = Instantiate(shootTrail, firePointPosition, trailRotation);
+            Destroy(trail.gameObject,0.05f);
+            //Debug.DrawLine(firePointPosition,shootDirection*100,Color.red);
 
         }
+        Debug.Log(transform.up);
     }
 }
