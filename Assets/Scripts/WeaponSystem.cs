@@ -5,6 +5,7 @@ public class WeaponSystem : MonoBehaviour
 {
     [SerializeField] private Transform firePoint;
     [SerializeField] private Transform shootTrail;
+    [SerializeField] private Transform muzzleFlash;
     private Animator _animator;
 
     private void Awake()
@@ -44,8 +45,18 @@ public class WeaponSystem : MonoBehaviour
             Transform trail = Instantiate(shootTrail, firePointPosition, trailRotation);
             Destroy(trail.gameObject,0.05f);
             //Debug.DrawLine(firePointPosition,shootDirection*100,Color.red);
+            MuzzleFlash();
 
         }
         Debug.Log(transform.up);
+    }
+
+    private void MuzzleFlash()
+    {
+        Transform flash = Instantiate(muzzleFlash,firePoint.position,firePoint.rotation);
+        flash.SetParent(firePoint);
+        float randomSize = Random.Range(0.6f,0.9f);
+        flash.localScale = Vector3.one * randomSize;
+        Destroy(flash.gameObject,0.05f);
     }
 }
